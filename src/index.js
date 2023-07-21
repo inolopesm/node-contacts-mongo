@@ -19,6 +19,20 @@ const main = async () => {
     console.log("- node src read");
   }
 
+  if (command === "create") {
+    const name = process.argv[3];
+    const phoneNumber = process.argv[4];
+
+    const client = new MongoClient(mongoUrl);
+    await client.connect();
+
+    try {
+      await client.db().collection("Contact").insertOne({ name, phoneNumber });
+    } finally {
+      await client.close();
+    }
+  }
+
   if (command === "read") {
     const client = new MongoClient(mongoUrl);
     await client.connect();
