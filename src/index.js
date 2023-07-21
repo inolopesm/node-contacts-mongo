@@ -1,3 +1,7 @@
+const { MongoClient, ObjectId } = require("mongodb");
+
+const mongoUrl = "mongodb://localhost/contacts";
+
 const main = async () => {
   const command = process.argv[2];
 
@@ -13,6 +17,18 @@ const main = async () => {
     console.log("Examples:");
     console.log("- node src create matheus 550012341234");
     console.log("- node src read");
+  }
+
+  if (command === "read") {
+    const client = new MongoClient(mongoUrl);
+    await client.connect();
+
+    try {
+      const rows = await client.db().collection("Contact").find().toArray();
+      console.table(rows);
+    } finally {
+      await client.close();
+    }
   }
 };
 
