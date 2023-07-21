@@ -44,6 +44,28 @@ const main = async () => {
       await client.close();
     }
   }
+
+  if (command === "update") {
+    const _id = new ObjectId(process.argv[3]);
+    const name = process.argv[4];
+    const phoneNumber = process.argv[5];
+
+    const client = new MongoClient(mongoUrl);
+    await client.connect();
+    const session = client.startSession();
+
+    try {
+      // work only on a replica set member or mongos
+      // await session.withTransaction(async () => {
+        await client
+          .db()
+          .collection("Contact")
+          .updateOne({ _id }, { $set: { name, phoneNumber } }, { session });
+      // });
+    } finally {
+      await client.close();
+    }
+  }
 };
 
 main();
