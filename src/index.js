@@ -66,6 +66,19 @@ const main = async () => {
       await client.close();
     }
   }
+
+  if (command === "delete") {
+    const _id = new ObjectId(process.argv[3]);
+
+    const client = new MongoClient(mongoUrl);
+    await client.connect();
+
+    try {
+      await client.db().collection("Contact").deleteOne({ _id });
+    } finally {
+      await client.close();
+    }
+  }
 };
 
 main();
